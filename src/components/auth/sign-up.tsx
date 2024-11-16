@@ -1,9 +1,6 @@
 import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
-import { Typography } from 'antd';
-
-const { Title } = Typography;
 
 type FieldType = {
   username?: string;
@@ -35,7 +32,10 @@ const SignUp = () => (
     <Form.Item<FieldType>
       label='Name'
       name='name'
-      rules={[{ required: true, message: 'Please input your username!' }]}
+      rules={[
+        { required: true, message: 'Please input your name!' },
+        { min: 6, message: 'Name must be at least 6 characters' },
+      ]}
     >
       <Input />
     </Form.Item>
