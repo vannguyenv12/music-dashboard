@@ -6,32 +6,53 @@ import {
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Sider } = Layout;
 
-const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
+const items1: MenuProps['items'] = ['1'].map((key) => ({
   key,
   label: `nav ${key}`,
 }));
 
-const items2: MenuProps['items'] = [
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-].map((icon, index) => {
-  const key = String(index + 1);
+const routes = [
+  {
+    key: '1',
+    icon: null,
+    label: 'Song',
+    children: [
+      {
+        key: '/manage-song',
+        label: 'Manage Song',
+      },
+      {
+        key: '/upload',
+        label: 'Upload Song',
+      },
+    ],
+  },
+  {
+    key: '2',
+    icon: null,
+    label: 'Artist',
+  },
+  {
+    key: '3',
+    icon: null,
+    label: 'Album',
+  },
+];
 
+const items2: MenuProps['items'] = routes.map((route) => {
   return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
+    key: route.key,
+    icon: route.icon,
+    label: route.label,
 
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
+    children: route?.children?.map((item) => {
       return {
-        key: subKey,
-        label: `option${subKey}`,
+        key: item.key,
+        label: item.label,
       };
     }),
   };
@@ -41,6 +62,12 @@ const RootLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const navigate = useNavigate();
+
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    navigate(key);
+  };
 
   return (
     <Layout>
@@ -62,6 +89,7 @@ const RootLayout = () => {
             defaultOpenKeys={['sub1']}
             style={{ height: '100%', borderRight: 0 }}
             items={items2}
+            onClick={handleMenuClick}
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>

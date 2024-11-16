@@ -15,8 +15,8 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: '/manage-music',
-        element: <div>Manage Music</div>,
+        path: '/manage-song',
+        element: <div>Manage Song</div>,
       },
     ],
   },
