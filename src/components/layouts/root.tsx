@@ -7,7 +7,7 @@ const { Header, Content, Sider } = Layout;
 
 const items1: MenuProps['items'] = ['1'].map((key) => ({
   key,
-  label: `nav ${key}`,
+  label: `Home`,
 }));
 
 const routes = [
