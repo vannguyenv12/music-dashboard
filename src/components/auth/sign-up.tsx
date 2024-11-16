@@ -13,7 +13,7 @@ const SignUp = () => {
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     console.log('Success:', values);
-    notification?.success({ message: 'Sign up successfully!' });
+    notification?.success('Sign up successfully!');
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (

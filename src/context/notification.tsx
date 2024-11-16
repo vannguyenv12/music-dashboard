@@ -1,9 +1,13 @@
 import { notification } from 'antd';
-import { NotificationInstance } from 'antd/es/notification/interface';
 import React, { useContext } from 'react';
 
+interface ICustomNotification {
+  success: (message: string) => void;
+  error: (message: string) => void;
+}
+
 export const NotificationContext =
-  React.createContext<NotificationInstance | null>(null);
+  React.createContext<ICustomNotification | null>(null);
 
 interface INotificationProviderProps {
   children: React.ReactNode;
@@ -12,8 +16,17 @@ interface INotificationProviderProps {
 const NotificationProvider = ({ children }: INotificationProviderProps) => {
   const [api, contextHolder] = notification.useNotification();
 
+  const customNotification = {
+    success(message: string) {
+      return api.success({ message });
+    },
+    error(message: string) {
+      return api.error({ message });
+    },
+  };
+
   return (
-    <NotificationContext.Provider value={api}>
+    <NotificationContext.Provider value={customNotification}>
       {contextHolder}
       {children}
     </NotificationContext.Provider>
