@@ -1,12 +1,7 @@
-import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
-import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Sider } = Layout;
 
@@ -63,6 +58,28 @@ const RootLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  //   React State
+  const [selectedChildrenKeys, setSelectedChildrenKeys] = useState<string[]>(
+    []
+  );
+  const [selectedParentsKeys, setSelectedParentKeys] = useState<string[]>([]);
+
+  //   React router dom
+  const location = useLocation();
+
+  useEffect(() => {
+    const parent = routes.find((route) =>
+      route?.children?.some((item) => item.key === location.pathname)
+    );
+
+    if (parent) {
+      const parentKey = parent.key;
+      setSelectedParentKeys([parentKey]);
+    }
+
+    setSelectedChildrenKeys([location.pathname]);
+  }, [location.pathname]);
+
   const navigate = useNavigate();
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
@@ -90,6 +107,8 @@ const RootLayout = () => {
             style={{ height: '100%', borderRight: 0 }}
             items={items2}
             onClick={handleMenuClick}
+            selectedKeys={selectedChildrenKeys} // children
+            openKeys={selectedParentsKeys} // parent
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>

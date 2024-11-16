@@ -18,6 +18,10 @@ const router = createBrowserRouter([
         path: '/manage-song',
         element: <div>Manage Song</div>,
       },
+      {
+        path: '/upload',
+        element: <div>Upload Song</div>,
+      },
     ],
   },
 
