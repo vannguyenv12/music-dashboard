@@ -7,6 +7,10 @@ import RootLayout from './components/layouts/root.tsx';
 import SignUpPage from './pages/sign-up/sign-up-page.tsx';
 import SignInPage from './pages/sign-in/sign-in-page.tsx';
 import NotificationProvider from './context/notification.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -40,7 +44,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <NotificationProvider>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </NotificationProvider>
   </StrictMode>
 );
