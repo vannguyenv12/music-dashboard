@@ -3,9 +3,9 @@ import { Button, Form, Input } from 'antd';
 import { useSignUp } from '../../apis/react-query/auth-react-query';
 
 type FieldType = {
-  username?: string;
-  name?: string;
-  password?: string;
+  username: string;
+  name: string;
+  password: string;
 };
 
 const SignUp = () => {
@@ -13,7 +13,7 @@ const SignUp = () => {
   const authMutation = useSignUp();
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    authMutation.mutate(values as any);
+    authMutation.mutate(values);
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (

@@ -13,11 +13,16 @@ import './index.css';
 import DashboardPage from './pages/dashboard/dashboard-page.tsx';
 import SignInPage from './pages/sign-in/sign-in-page.tsx';
 import SignUpPage from './pages/sign-up/sign-up-page.tsx';
+import ProtectedRoute from './components/auth/protected-route.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <RootLayout />,
+    element: (
+      <ProtectedRoute>
+        <RootLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,

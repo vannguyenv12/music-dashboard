@@ -1,11 +1,21 @@
+import { useNavigate } from 'react-router-dom';
 import { useGetCurrentUser } from '../../apis/react-query/user-react-query';
+import { useEffect } from 'react';
 
-export default function ProtectedRoute() {
+interface IProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+export default function ProtectedRoute({ children }: IProtectedRouteProps) {
+  const navigate = useNavigate();
   // 1) Get access token from local storage
   const accessToken = localStorage.getItem('accessToken') || '';
   // 2) use AT -> get current user
   const { data } = useGetCurrentUser(accessToken);
 
-  // 3) Based on step 2) -> check role
-  //   3.1) If user is not an admin -> navigate to sign in page
+  useEffect(() => {
+    if (data && data.data.role !== 'admin') navigate('/sign-in');
+  }, []);
+
+  return children;
 }

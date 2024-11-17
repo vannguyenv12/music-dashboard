@@ -3,8 +3,8 @@ import { Button, Form, Input } from 'antd';
 import { useSignIn } from '../../apis/react-query/auth-react-query';
 
 type FieldType = {
-  username?: string;
-  password?: string;
+  username: string;
+  password: string;
 };
 
 const SignUp = () => {
@@ -12,7 +12,7 @@ const SignUp = () => {
   const authMutation = useSignIn();
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    authMutation.mutate(values as any);
+    authMutation.mutate(values);
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
