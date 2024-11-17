@@ -12,14 +12,11 @@ type FieldType = {
 };
 
 const SignUp = () => {
-  // Context
-  const notification = useNotificationContext();
   // React Query
   const authMutation = useSignUp();
 
-  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    await authMutation.mutateAsync(values as any);
-    notification.success('Sign up success');
+  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+    authMutation.mutate(values as any);
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
