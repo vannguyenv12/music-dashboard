@@ -1,6 +1,7 @@
 import type { FormProps } from 'antd';
 import { Button, Form, Input } from 'antd';
 import { useNotificationContext } from '../../context/notification';
+import { authApi } from '../../apis/auth-api';
 
 type FieldType = {
   username?: string;
@@ -11,9 +12,17 @@ type FieldType = {
 const SignUp = () => {
   const notification = useNotificationContext();
 
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
+
     notification?.success('Sign up successfully!');
+
+    try {
+      const data = await authApi.signUp(values);
+      console.log('check data', data);
+    } catch (error) {
+      console.log('failed to sign up', error);
+    }
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
@@ -38,10 +47,7 @@ const SignUp = () => {
       <Form.Item<FieldType>
         label='Name'
         name='name'
-        rules={[
-          { required: true, message: 'Please input your name!' },
-          { min: 6, message: 'Name must be at least 6 characters' },
-        ]}
+        rules={[{ required: true, message: 'Please input your name!' }]}
       >
         <Input />
       </Form.Item>
