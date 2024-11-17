@@ -2,6 +2,7 @@ import type { FormProps } from 'antd';
 import { Button, Form, Input } from 'antd';
 import { useNotificationContext } from '../../context/notification';
 import { authApi } from '../../apis/auth-api';
+import { useState } from 'react';
 
 type FieldType = {
   username?: string;
@@ -12,16 +13,18 @@ type FieldType = {
 const SignUp = () => {
   const notification = useNotificationContext();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    console.log('Success:', values);
-
-    notification?.success('Sign up successfully!');
-
+    setIsSubmitting(true);
     try {
       const data = await authApi.signUp(values);
       console.log('check data', data);
+      notification?.success('Sign up successfully!');
     } catch (error) {
       console.log('failed to sign up', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -69,7 +72,7 @@ const SignUp = () => {
       </Form.Item>
 
       <Form.Item label={null}>
-        <Button type='primary' htmlType='submit'>
+        <Button type='primary' htmlType='submit' disabled={isSubmitting}>
           Submit
         </Button>
       </Form.Item>
