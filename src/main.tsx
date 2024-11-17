@@ -1,21 +1,18 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import DashboardPage from './pages/dashboard/dashboard-page.tsx';
-import './index.css';
-import RootLayout from './components/layouts/root.tsx';
-import SignUpPage from './pages/sign-up/sign-up-page.tsx';
-import SignInPage from './pages/sign-in/sign-in-page.tsx';
-import NotificationProvider, {
-  globalNotify,
-  useNotificationContext,
-} from './context/notification.tsx';
 import {
   MutationCache,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import RootLayout from './components/layouts/root.tsx';
+import NotificationProvider, { globalNotify } from './context/notification.tsx';
+import './index.css';
+import DashboardPage from './pages/dashboard/dashboard-page.tsx';
+import SignInPage from './pages/sign-in/sign-in-page.tsx';
+import SignUpPage from './pages/sign-up/sign-up-page.tsx';
 
 const router = createBrowserRouter([
   {

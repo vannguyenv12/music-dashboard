@@ -1,10 +1,10 @@
-export interface ISignUpPayload {
+export interface IAuthPayload {
   username: string;
-  name: string;
+  name?: string;
   password: string;
 }
 
-export interface ISignUpResponse {
+export interface IAuthResponse {
   message: string;
   data: {
     accessToken: string;
