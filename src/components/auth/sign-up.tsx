@@ -3,6 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { useNotificationContext } from '../../context/notification';
 import { authApi } from '../../apis/auth-api';
 import { useMutation } from '@tanstack/react-query';
+import { useSignUp } from '../../apis/react-query/auth-react-query';
 
 type FieldType = {
   username?: string;
@@ -14,13 +15,10 @@ const SignUp = () => {
   // Context
   const notification = useNotificationContext();
   // React Query
-  const authMutation = useMutation({
-    mutationFn: (data) => authApi.signUp(data),
-  });
+  const authMutation = useSignUp();
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     await authMutation.mutateAsync(values as any);
-
     notification.success('Sign up success');
   };
 
