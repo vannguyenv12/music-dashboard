@@ -9,13 +9,12 @@ interface IProtectedRouteProps {
 export default function ProtectedRoute({ children }: IProtectedRouteProps) {
   const navigate = useNavigate();
   // 1) Get access token from local storage
-  const accessToken = localStorage.getItem('accessToken') || '';
   // 2) use AT -> get current user
-  const { data } = useGetCurrentUser(accessToken);
+  const { data } = useGetCurrentUser();
 
   useEffect(() => {
     if (data && data.data.role !== 'admin') navigate('/sign-in');
-  }, []);
+  }, [data]);
 
   return children;
 }

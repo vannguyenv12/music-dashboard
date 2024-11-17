@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const axiosClient = axios.create({
   baseURL: 'http://localhost:5001/api/v1',
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+  },
 });
 
 // Add a request interceptor
