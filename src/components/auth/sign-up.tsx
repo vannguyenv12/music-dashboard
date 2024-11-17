@@ -2,7 +2,6 @@ import type { FormProps } from 'antd';
 import { Button, Form, Input } from 'antd';
 import { useNotificationContext } from '../../context/notification';
 import { authApi } from '../../apis/auth-api';
-import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 type FieldType = {
@@ -17,16 +16,12 @@ const SignUp = () => {
   // React Query
   const authMutation = useMutation({
     mutationFn: (data) => authApi.signUp(data),
-    onError: (error) => {
-      console.log('check error from sign up', error);
-      notification?.error(error.message);
-    },
   });
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     await authMutation.mutateAsync(values as any);
 
-    notification?.success('Sign up success');
+    notification.success('Sign up success');
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (

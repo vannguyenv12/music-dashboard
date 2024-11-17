@@ -13,6 +13,9 @@ interface INotificationProviderProps {
   children: React.ReactNode;
 }
 
+// Global notification
+let globalNotification: ICustomNotification | null = null;
+
 const NotificationProvider = ({ children }: INotificationProviderProps) => {
   const [api, contextHolder] = notification.useNotification();
 
@@ -25,6 +28,8 @@ const NotificationProvider = ({ children }: INotificationProviderProps) => {
     },
   };
 
+  globalNotification = customNotification;
+
   return (
     <NotificationContext.Provider value={customNotification}>
       {contextHolder}
@@ -34,7 +39,17 @@ const NotificationProvider = ({ children }: INotificationProviderProps) => {
 };
 
 export const useNotificationContext = () => {
-  return useContext(NotificationContext);
+  const context = useContext(NotificationContext);
+
+  if (!context) throw new Error('Context not found');
+
+  return context;
+};
+
+// Global notify function
+export const globalNotify = {
+  success: (message: string) => globalNotification?.success(message),
+  error: (message: string) => globalNotification?.error(message),
 };
 
 export default NotificationProvider;
