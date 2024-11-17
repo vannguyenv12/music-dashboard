@@ -3,6 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { useNotificationContext } from '../../context/notification';
 import { authApi } from '../../apis/auth-api';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 type FieldType = {
   username?: string;
@@ -11,21 +12,21 @@ type FieldType = {
 };
 
 const SignUp = () => {
+  // Context
   const notification = useNotificationContext();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // React Query
+  const authMutation = useMutation({
+    mutationFn: (data) => authApi.signUp(data),
+    onError: (error) => {
+      console.log('check error from sign up', error);
+      notification?.error(error.message);
+    },
+  });
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    setIsSubmitting(true);
-    try {
-      const data = await authApi.signUp(values);
-      console.log('check data', data);
-      notification?.success('Sign up successfully!');
-    } catch (error) {
-      console.log('failed to sign up', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    await authMutation.mutateAsync(values as any);
+
+    notification?.success('Sign up success');
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
@@ -72,7 +73,11 @@ const SignUp = () => {
       </Form.Item>
 
       <Form.Item label={null}>
-        <Button type='primary' htmlType='submit' disabled={isSubmitting}>
+        <Button
+          type='primary'
+          htmlType='submit'
+          disabled={authMutation.isPending}
+        >
           Submit
         </Button>
       </Form.Item>
