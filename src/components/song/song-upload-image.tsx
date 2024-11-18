@@ -1,59 +1,63 @@
-import { Button } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import { Image, Upload } from 'antd';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 export default function SongUploadImage() {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | undefined>();
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const objectUrl = URL.createObjectURL(e.target.files[0]);
-
-      console.log('check object url', objectUrl);
-      setSelectedImage(objectUrl);
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
     }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
   };
 
-  const handleUpload = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    inputRef.current?.click();
-  };
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
 
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type='button'>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <input
-        type='file'
-        style={{ display: 'none' }}
-        ref={inputRef}
-        onChange={handleChangeImage}
-      />
-      <Button
-        htmlType='submit'
-        style={{
-          justifyItems: 'flex-start',
-          alignSelf: 'flex-start',
-        }}
-        icon={<UploadOutlined />}
-        onClick={handleUpload}
+    <>
+      <Upload
+        action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+        listType='picture-card'
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={handleChange}
       >
-        Click to Upload
-      </Button>
-      <img
-        width={300}
-        height={300}
-        src={selectedImage}
-        alt='Preview Image'
-        style={{ objectFit: 'contain' }}
-      />
-      <Button
-        type='primary'
-        style={{
-          justifyItems: 'flex-start',
-          alignSelf: 'flex-start',
-        }}
-      >
-        Upload
-      </Button>
-    </div>
+        {fileList.length >= 8 ? null : uploadButton}
+      </Upload>
+      {previewImage && (
+        <Image
+          wrapperStyle={{ display: 'none' }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+          }}
+          src={previewImage}
+        />
+      )}
+    </>
   );
 }
