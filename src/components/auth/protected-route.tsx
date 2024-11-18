@@ -16,7 +16,7 @@ export default function ProtectedRoute({ children }: IProtectedRouteProps) {
 
   useEffect(() => {
     if (isError) return navigate('/sign-in');
-    if (data && data.data.role !== 'admin') return navigate('/sign-in');
+    if (data && data.data.role === 'user') return navigate('/sign-in');
   }, [data, isError]);
 
   return children;

@@ -1,6 +1,10 @@
 import type { FormProps } from 'antd';
 import { Button, Form, Input } from 'antd';
-import { useSignIn } from '../../apis/react-query/auth-react-query';
+import {
+  useSignIn,
+  useSignInArtist,
+} from '../../apis/react-query/auth-react-query';
+import { useLocation } from 'react-router-dom';
 
 type FieldType = {
   username: string;
@@ -8,11 +12,20 @@ type FieldType = {
 };
 
 const SignUp = () => {
+  // React Router DOM
+  const location = useLocation();
   // React Query
   const authMutation = useSignIn();
+  const authArtistMutation = useSignInArtist();
+
+  const isArtistPage = location.pathname === '/sign-in-artist';
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    authMutation.mutate(values);
+    if (isArtistPage) {
+      authArtistMutation.mutate(values);
+    } else {
+      authMutation.mutate(values);
+    }
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (

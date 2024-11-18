@@ -46,6 +46,14 @@ const router = createBrowserRouter([
     path: '/sign-in',
     element: <SignInPage />,
   },
+  {
+    path: '/sign-up-artist',
+    element: <SignUpPage />,
+  },
+  {
+    path: '/sign-in-artist',
+    element: <SignInPage />,
+  },
 ]);
 
 const queryClient = new QueryClient({
