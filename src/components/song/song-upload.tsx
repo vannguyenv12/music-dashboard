@@ -1,4 +1,5 @@
 import { Button, Drawer, Space } from 'antd';
+import SongTab from './song-tab';
 
 interface ISongUploadProps {
   open: boolean;
@@ -9,7 +10,7 @@ export default function SongUpload({ open, setOpen }: ISongUploadProps) {
   return (
     <>
       <Drawer
-        title={` Drawer`}
+        title={`Upload`}
         placement='right'
         size={'large'}
         onClose={() => setOpen(false)}
@@ -23,9 +24,7 @@ export default function SongUpload({ open, setOpen }: ISongUploadProps) {
           </Space>
         }
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <SongTab />
       </Drawer>
     </>
   );
