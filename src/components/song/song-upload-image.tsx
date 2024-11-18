@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useUploadSongImage } from '../../apis/react-query/song-react-query';
+import { RcFile } from 'antd/es/upload';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -22,6 +23,7 @@ export default function SongUploadImage() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [progress, setProgress] = useState(0);
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -33,12 +35,15 @@ export default function SongUploadImage() {
   };
 
   const handleUploadImage: UploadProps['customRequest'] = async (options) => {
-    const { file, onProgress, onSuccess } = options;
+    const { file, onSuccess } = options;
 
     await uploadImage.mutateAsync({
       id: '673b28b87c78a45d013aa274',
-      image: file,
+      image: file as File,
+      onProgress: (value) => setProgress(value),
     });
+
+    onSuccess?.('ok');
   };
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>

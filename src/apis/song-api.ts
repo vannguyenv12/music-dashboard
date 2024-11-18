@@ -16,7 +16,15 @@ export const songApi = {
 
     return axiosClient.post<unknown, ISongResponse>(url, data);
   },
-  uploadImage({ id, image }: { id: string; image: any }) {
+  uploadImage({
+    id,
+    image,
+    onProgress,
+  }: {
+    id: string;
+    image: File;
+    onProgress: (value: number) => void;
+  }) {
     const url = `/songs/${id}/upload-cover`;
 
     const formData = new FormData();
@@ -24,6 +32,10 @@ export const songApi = {
 
     return axiosClient.post<unknown, ISongResponse>(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (event) => {
+        const percent = Math.floor((event.loaded / (event.total || 1)) * 100);
+        onProgress(percent);
+      },
     });
   },
 };
