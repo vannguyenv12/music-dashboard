@@ -5,9 +5,20 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Sider } = Layout;
 
-const items1: MenuProps['items'] = ['1'].map((key) => ({
-  key,
-  label: `Home`,
+const headerItems = [
+  {
+    key: '1',
+    label: 'Home',
+  },
+  {
+    key: '2',
+    label: 'Logout',
+  },
+];
+
+const items1: MenuProps['items'] = headerItems.map((item) => ({
+  key: item.key,
+  label: item.label,
 }));
 
 const routes = [
@@ -86,6 +97,13 @@ const RootLayout = () => {
     navigate(key);
   };
 
+  const handleHeaderMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '2') {
+      localStorage.removeItem('accessToken');
+      navigate('/sign-in');
+    }
+  };
+
   return (
     <Layout>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
@@ -93,9 +111,10 @@ const RootLayout = () => {
         <Menu
           theme='dark'
           mode='horizontal'
-          defaultSelectedKeys={['2']}
+          defaultSelectedKeys={['1']}
           items={items1}
           style={{ flex: 1, minWidth: 0 }}
+          onClick={handleHeaderMenuClick}
         />
       </Header>
       <Layout>
@@ -109,6 +128,7 @@ const RootLayout = () => {
             onClick={handleMenuClick}
             selectedKeys={selectedChildrenKeys} // children
             openKeys={selectedParentsKeys} // parent
+            onOpenChange={(openKeys) => setSelectedParentKeys(openKeys)}
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>

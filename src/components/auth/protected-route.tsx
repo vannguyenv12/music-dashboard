@@ -10,11 +10,14 @@ export default function ProtectedRoute({ children }: IProtectedRouteProps) {
   const navigate = useNavigate();
   // 1) Get access token from local storage
   // 2) use AT -> get current user
-  const { data } = useGetCurrentUser();
+  const { data, isError } = useGetCurrentUser();
+
+  console.log('has error', isError);
 
   useEffect(() => {
-    if (data && data.data.role !== 'admin') navigate('/sign-in');
-  }, [data]);
+    if (isError) return navigate('/sign-in');
+    if (data && data.data.role !== 'admin') return navigate('/sign-in');
+  }, [data, isError]);
 
   return children;
 }
