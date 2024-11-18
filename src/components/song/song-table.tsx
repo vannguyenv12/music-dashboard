@@ -1,20 +1,24 @@
-import { Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
+import { Space, Table } from 'antd';
+import { useGetSongs } from '../../apis/react-query/song-react-query';
+import { ISong } from '../../models/song-model';
+import { createBackendUrl } from '../../configs/app-config';
+import dayjs from 'dayjs';
+import { formatDate } from '../../utils/date-util';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
-
-const columns: TableProps<DataType>['columns'] = [
+const columns: TableProps<ISong>['columns'] = [
   {
     title: 'Cover Image',
     dataIndex: 'coverImage',
     key: 'coverImage',
-    render: (text) => <a>{text}</a>,
+    render: (text) => (
+      <img
+        width={50}
+        height={50}
+        alt='Cover Image'
+        src={createBackendUrl(`/songs/${text}`)}
+      />
+    ),
   },
   {
     title: 'Title',
@@ -24,75 +28,37 @@ const columns: TableProps<DataType>['columns'] = [
   },
   {
     title: 'Artist',
-    dataIndex: 'artist',
-    key: 'artist',
+    dataIndex: 'artistName',
+    key: 'artistName',
   },
   {
     title: 'Duration',
     dataIndex: 'duration',
     key: 'duration',
+    render: (text) => <span>{text?.toFixed(2)}</span>,
   },
   {
     title: 'Genre',
     key: 'genre',
     dataIndex: 'genre',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
   },
   {
     title: 'Release Date',
     dataIndex: 'releaseDate',
     key: 'releaseDate',
+    render: (text) => <span>{formatDate(text)}</span>,
   },
   {
     title: 'Action',
     key: 'action',
-    render: (_, record) => (
-      <Space size='middle'>
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    render: (_, record) => <Space size='middle'></Space>,
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    title: 'John Brown',
-    genre: 32,
-    artist: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+export default function SongTable() {
+  const { data: songs } = useGetSongs();
 
-const SongTable = () => <Table<DataType> columns={columns} dataSource={data} />;
+  console.log('check data', songs?.data);
 
-export default SongTable;
+  return <Table<ISong> columns={columns} dataSource={songs?.data || []} />;
+}

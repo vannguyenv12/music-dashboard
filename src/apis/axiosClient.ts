@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { createBackendUrl } from '../configs/app-config';
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:5001/api/v1',
+  baseURL: createBackendUrl('/api/v1'),
 });
 
 // Add a request interceptor

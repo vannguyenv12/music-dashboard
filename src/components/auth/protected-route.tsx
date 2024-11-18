@@ -12,8 +12,6 @@ export default function ProtectedRoute({ children }: IProtectedRouteProps) {
   // 2) use AT -> get current user
   const { data, isError } = useGetCurrentUser();
 
-  console.log('has error', isError);
-
   useEffect(() => {
     if (isError) return navigate('/sign-in');
     if (data && data.data.role === 'user') return navigate('/sign-in');
