@@ -26,7 +26,7 @@ const formItemLayout = {
 };
 
 export default function SongForm({ form }: any) {
-  const { data: genres } = useGetGenres();
+  const { data: genres, isLoading } = useGetGenres();
 
   const options = genres?.data.map((genre) => ({
     value: genre.name,
@@ -54,13 +54,16 @@ export default function SongForm({ form }: any) {
         <Input />
       </Form.Item>
 
-      <Form.Item
-        label='Genre'
-        name='genre'
-        rules={[{ required: true, message: 'Please input!' }]}
-      >
-        <Select options={options} />
-      </Form.Item>
+      {isLoading && <div>Loading...</div>}
+      {!isLoading && (
+        <Form.Item
+          label='Genre'
+          name='genre'
+          rules={[{ required: true, message: 'Please input!' }]}
+        >
+          <Select options={options} />
+        </Form.Item>
+      )}
 
       <Form.Item
         label='DatePicker'
