@@ -35,15 +35,19 @@ export default function SongUploadImage() {
   };
 
   const handleUploadImage: UploadProps['customRequest'] = async (options) => {
-    const { file, onSuccess } = options;
+    const { file, onSuccess, onError } = options;
 
-    await uploadImage.mutateAsync({
-      id: '673b28b87c78a45d013aa274',
-      image: file as File,
-      onProgress: (value) => setProgress(value),
-    });
+    try {
+      await uploadImage.mutateAsync({
+        id: '673b28b87c78a45d013aa274',
+        image: file as File,
+        onProgress: (value) => setProgress(value),
+      });
 
-    onSuccess?.('ok');
+      onSuccess?.('ok');
+    } catch (error) {
+      onError?.(error as Error);
+    }
   };
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
@@ -66,6 +70,7 @@ export default function SongUploadImage() {
       >
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>
+      {progress > 0 && <div>Uploading ... {progress}%</div>}
       {previewImage && (
         <Image
           wrapperStyle={{ display: 'none' }}
