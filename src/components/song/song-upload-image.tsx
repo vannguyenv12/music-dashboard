@@ -5,6 +5,7 @@ import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useUploadSongImage } from '../../apis/react-query/song-react-query';
 import { RcFile } from 'antd/es/upload';
 import { useQueryClient } from '@tanstack/react-query';
+import { ISong } from '../../models/song-model';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -18,9 +19,13 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 export interface ISongUploadImage {
   open: boolean;
+  selectedSong: ISong | null;
 }
 
-export default function SongUploadImage({ open }: ISongUploadImage) {
+export default function SongUploadImage({
+  open,
+  selectedSong,
+}: ISongUploadImage) {
   // React Query
   const uploadImage = useUploadSongImage();
   const queryClient = useQueryClient();
@@ -41,11 +46,13 @@ export default function SongUploadImage({ open }: ISongUploadImage) {
   };
 
   const handleUploadImage: UploadProps['customRequest'] = async (options) => {
+    if (!selectedSong) return;
+
     const { file, onSuccess, onError } = options;
 
     try {
       await uploadImage.mutateAsync({
-        id: '673b28b87c78a45d013aa274',
+        id: selectedSong._id,
         image: file as File,
         onProgress: (value) => setProgress(value),
       });

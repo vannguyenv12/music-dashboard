@@ -3,14 +3,17 @@ import { Button, Space, Table } from 'antd';
 import { useGetSongs } from '../../apis/react-query/song-react-query';
 import { ISong } from '../../models/song-model';
 import { createBackendUrl } from '../../configs/app-config';
-import dayjs from 'dayjs';
 import { formatDate } from '../../utils/date-util';
 
 interface ISongTableProps {
   setOpen: (open: boolean) => void;
+  setSelectedSong: (song: ISong | null) => void;
 }
 
-export default function SongTable({ setOpen }: ISongTableProps) {
+export default function SongTable({
+  setOpen,
+  setSelectedSong,
+}: ISongTableProps) {
   const columns: TableProps<ISong>['columns'] = [
     {
       title: 'Cover Image',
@@ -58,6 +61,7 @@ export default function SongTable({ setOpen }: ISongTableProps) {
       key: 'action',
       render: (_, record) => {
         const handleOpenUpload = () => {
+          setSelectedSong(record);
           setOpen(true);
         };
 
