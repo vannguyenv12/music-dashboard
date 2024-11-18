@@ -1,16 +1,11 @@
-import {
-  Button,
-  Cascader,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Mentions,
-  Select,
-  TreeSelect,
-  Segmented,
-} from 'antd';
+import { DatePicker, Form, FormProps, Input, Select } from 'antd';
 import { useGetGenres } from '../../apis/react-query/genre-react-query';
+import { ISongPayload } from '../../models/song-model';
+import { formatDate, formatDateForPayload } from '../../utils/date-util';
+import { useCreateSong } from '../../apis/react-query/song-react-query';
+import { useGetCurrentUser } from '../../apis/react-query/user-react-query';
+import { useNotificationContext } from '../../context/notification';
+import { useQueryClient } from '@tanstack/react-query';
 
 const { RangePicker } = DatePicker;
 
@@ -25,16 +20,33 @@ const formItemLayout = {
   },
 };
 
-export default function SongForm({ form }: any) {
+export default function SongForm({ form, setOpen }: any) {
+  // React Context
+  const notification = useNotificationContext();
+  // React Query
+  const queryClient = useQueryClient();
   const { data: genres, isLoading } = useGetGenres();
+  const createSong = useCreateSong();
+  const { data: me } = useGetCurrentUser();
+
+  const artistId = me?.data._id || '';
 
   const options = genres?.data.map((genre) => ({
     value: genre.name,
     label: genre.name,
   }));
 
-  const handleFinish = (values: any) => {
-    console.log('check values', values);
+  const handleFinish: FormProps<ISongPayload>['onFinish'] = async (values) => {
+    const data = {
+      ...values,
+      artist: artistId,
+      releaseDate: formatDateForPayload(values.releaseDate),
+    };
+    await createSong.mutateAsync(data);
+    notification.success('Create song successfully!');
+    setOpen(false);
+
+    queryClient.invalidateQueries({ queryKey: ['songs'] });
   };
 
   return (
@@ -46,7 +58,7 @@ export default function SongForm({ form }: any) {
       initialValues={{ variant: 'filled' }}
       onFinish={handleFinish}
     >
-      <Form.Item
+      <Form.Item<ISongPayload>
         label='Title'
         name='title'
         rules={[{ required: true, message: 'Please input!' }]}
@@ -56,7 +68,7 @@ export default function SongForm({ form }: any) {
 
       {isLoading && <div>Loading...</div>}
       {!isLoading && (
-        <Form.Item
+        <Form.Item<ISongPayload>
           label='Genre'
           name='genre'
           rules={[{ required: true, message: 'Please input!' }]}
@@ -65,9 +77,9 @@ export default function SongForm({ form }: any) {
         </Form.Item>
       )}
 
-      <Form.Item
+      <Form.Item<ISongPayload>
         label='DatePicker'
-        name='DatePicker'
+        name='releaseDate'
         rules={[{ required: true, message: 'Please input!' }]}
       >
         <DatePicker />

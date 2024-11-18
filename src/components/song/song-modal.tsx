@@ -7,6 +7,11 @@ export default function SongModal() {
 
   const [form] = Form.useForm();
 
+  const handleSubmit = () => {
+    form.submit();
+    //setOpen(false);
+  };
+
   return (
     <>
       <Button type='primary' onClick={() => setOpen(true)}>
@@ -17,15 +22,12 @@ export default function SongModal() {
         title='Song Modal'
         centered
         open={open}
-        onOk={() => {
-          form.submit();
-          // setOpen(false);
-        }}
+        onOk={handleSubmit}
         onCancel={() => setOpen(false)}
         width={700}
         okText='Submit'
       >
-        <SongForm form={form} />
+        <SongForm form={form} setOpen={setOpen} />
       </Modal>
     </>
   );

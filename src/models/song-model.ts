@@ -15,3 +15,15 @@ export interface ISongsResponse {
   message: string;
   data: ISong[];
 }
+
+export interface ISongResponse {
+  message: string;
+  data: ISong;
+}
+
+export interface ISongPayload {
+  title: string;
+  artist: string;
+  genre: string;
+  releaseDate: string;
+}

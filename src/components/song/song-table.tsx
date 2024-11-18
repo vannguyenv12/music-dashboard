@@ -60,5 +60,11 @@ export default function SongTable() {
 
   console.log('check data', songs?.data);
 
-  return <Table<ISong> columns={columns} dataSource={songs?.data || []} />;
+  return (
+    <Table<ISong>
+      columns={columns}
+      dataSource={songs?.data || []}
+      pagination={{ pageSize: 100 }}
+    />
+  );
 }
