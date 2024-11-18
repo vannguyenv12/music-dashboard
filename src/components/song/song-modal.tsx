@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Button, Modal } from 'antd';
+import { useState } from 'react';
 import SongForm from './song-form';
 
 export default function SongModal() {
@@ -16,7 +16,8 @@ export default function SongModal() {
         open={open}
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        width={1000}
+        width={700}
+        okText='Submit'
       >
         <SongForm />
       </Modal>

@@ -31,7 +31,7 @@ export default function SongForm() {
       {...formItemLayout}
       form={form}
       variant={'filled'}
-      style={{ maxWidth: 600 }}
+      style={{ maxWidth: 600, margin: '0 auto' }}
       initialValues={{ variant: 'filled' }}
     >
       <Form.Item
@@ -58,11 +58,11 @@ export default function SongForm() {
         <DatePicker />
       </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+      {/* <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
         <Button type='primary' htmlType='submit'>
           Submit
         </Button>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 }
