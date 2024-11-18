@@ -1,13 +1,11 @@
-import { DatePicker, Form, FormProps, Input, Select } from 'antd';
+import { useQueryClient } from '@tanstack/react-query';
+import { DatePicker, Form, FormInstance, FormProps, Input, Select } from 'antd';
 import { useGetGenres } from '../../apis/react-query/genre-react-query';
-import { ISongPayload } from '../../models/song-model';
-import { formatDate, formatDateForPayload } from '../../utils/date-util';
 import { useCreateSong } from '../../apis/react-query/song-react-query';
 import { useGetCurrentUser } from '../../apis/react-query/user-react-query';
 import { useNotificationContext } from '../../context/notification';
-import { useQueryClient } from '@tanstack/react-query';
-
-const { RangePicker } = DatePicker;
+import { ISongPayload } from '../../models/song-model';
+import { formatDateForPayload } from '../../utils/date-util';
 
 const formItemLayout = {
   labelCol: {
@@ -20,7 +18,12 @@ const formItemLayout = {
   },
 };
 
-export default function SongForm({ form, setOpen }: any) {
+interface ISongFormProps {
+  form: FormInstance<ISongPayload>;
+  setOpen: (open: boolean) => void;
+}
+
+export default function SongForm({ form, setOpen }: ISongFormProps) {
   // React Context
   const notification = useNotificationContext();
   // React Query

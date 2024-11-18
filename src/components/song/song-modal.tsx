@@ -1,15 +1,15 @@
 import { Button, Form, Modal } from 'antd';
 import { useState } from 'react';
 import SongForm from './song-form';
+import { ISongPayload } from '../../models/song-model';
 
 export default function SongModal() {
   const [open, setOpen] = useState(false);
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<ISongPayload>();
 
   const handleSubmit = () => {
     form.submit();
-    //setOpen(false);
   };
 
   return (
