@@ -4,16 +4,15 @@ import { useGetSongs } from '../../apis/react-query/song-react-query';
 import { ISong } from '../../models/song-model';
 import { createBackendUrl } from '../../configs/app-config';
 import { formatDate } from '../../utils/date-util';
+import { useSongContext } from '../../context/song-context';
 
 interface ISongTableProps {
   setOpen: (open: boolean) => void;
-  setSelectedSong: (song: ISong | null) => void;
 }
 
-export default function SongTable({
-  setOpen,
-  setSelectedSong,
-}: ISongTableProps) {
+export default function SongTable({ setOpen }: ISongTableProps) {
+  const { setSelectedSong } = useSongContext();
+
   const columns: TableProps<ISong>['columns'] = [
     {
       title: 'Cover Image',

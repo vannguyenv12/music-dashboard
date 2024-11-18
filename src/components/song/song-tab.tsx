@@ -1,8 +1,6 @@
-import React from 'react';
-import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
+import { Tabs } from 'antd';
 import SongUploadImage from './song-upload-image';
-import { ISong } from '../../models/song-model';
 
 const onChange = (key: string) => {
   console.log(key);
@@ -10,15 +8,14 @@ const onChange = (key: string) => {
 
 interface ISongTabProps {
   open: boolean;
-  selectedSong: ISong | null;
 }
 
-export default function SongTab({ open, selectedSong }: ISongTabProps) {
+export default function SongTab({ open }: ISongTabProps) {
   const items: TabsProps['items'] = [
     {
       key: '1',
       label: 'Upload Image',
-      children: <SongUploadImage open={open} selectedSong={selectedSong} />,
+      children: <SongUploadImage open={open} />,
     },
     {
       key: '2',

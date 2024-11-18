@@ -1,18 +1,12 @@
 import { Button, Drawer, Space } from 'antd';
 import SongTab from './song-tab';
-import { ISong } from '../../models/song-model';
 
 interface ISongUploadProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  selectedSong: ISong | null;
 }
 
-export default function SongUpload({
-  open,
-  setOpen,
-  selectedSong,
-}: ISongUploadProps) {
+export default function SongUpload({ open, setOpen }: ISongUploadProps) {
   return (
     <>
       <Drawer
@@ -30,7 +24,7 @@ export default function SongUpload({
           </Space>
         }
       >
-        <SongTab open={open} selectedSong={selectedSong} />
+        <SongTab open={open} />
       </Drawer>
     </>
   );

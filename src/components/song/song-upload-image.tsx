@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload } from 'antd';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
-import { useUploadSongImage } from '../../apis/react-query/song-react-query';
-import { RcFile } from 'antd/es/upload';
 import { useQueryClient } from '@tanstack/react-query';
-import { ISong } from '../../models/song-model';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { Image, Upload } from 'antd';
+import { useEffect, useState } from 'react';
+import { useUploadSongImage } from '../../apis/react-query/song-react-query';
+import { useSongContext } from '../../context/song-context';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -19,13 +18,12 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 export interface ISongUploadImage {
   open: boolean;
-  selectedSong: ISong | null;
 }
 
-export default function SongUploadImage({
-  open,
-  selectedSong,
-}: ISongUploadImage) {
+export default function SongUploadImage({ open }: ISongUploadImage) {
+  // Context
+  const { selectedSong } = useSongContext();
+
   // React Query
   const uploadImage = useUploadSongImage();
   const queryClient = useQueryClient();
