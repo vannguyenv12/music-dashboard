@@ -10,6 +10,7 @@ import {
   TreeSelect,
   Segmented,
 } from 'antd';
+import { useGetGenres } from '../../apis/react-query/genre-react-query';
 
 const { RangePicker } = DatePicker;
 
@@ -24,8 +25,18 @@ const formItemLayout = {
   },
 };
 
-export default function SongForm() {
-  const [form] = Form.useForm();
+export default function SongForm({ form }: any) {
+  const { data: genres } = useGetGenres();
+
+  const options = genres?.data.map((genre) => ({
+    value: genre.name,
+    label: genre.name,
+  }));
+
+  const handleFinish = (values: any) => {
+    console.log('check values', values);
+  };
+
   return (
     <Form
       {...formItemLayout}
@@ -33,6 +44,7 @@ export default function SongForm() {
       variant={'filled'}
       style={{ maxWidth: 600, margin: '0 auto' }}
       initialValues={{ variant: 'filled' }}
+      onFinish={handleFinish}
     >
       <Form.Item
         label='Title'
@@ -47,7 +59,7 @@ export default function SongForm() {
         name='genre'
         rules={[{ required: true, message: 'Please input!' }]}
       >
-        <Select />
+        <Select options={options} />
       </Form.Item>
 
       <Form.Item
@@ -57,12 +69,6 @@ export default function SongForm() {
       >
         <DatePicker />
       </Form.Item>
-
-      {/* <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-        <Button type='primary' htmlType='submit'>
-          Submit
-        </Button>
-      </Form.Item> */}
     </Form>
   );
 }
