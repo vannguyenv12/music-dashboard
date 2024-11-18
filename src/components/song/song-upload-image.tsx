@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useUploadSongImage } from '../../apis/react-query/song-react-query';
 import { RcFile } from 'antd/es/upload';
+import { useQueryClient } from '@tanstack/react-query';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -15,9 +16,14 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function SongUploadImage() {
+export interface ISongUploadImage {
+  open: boolean;
+}
+
+export default function SongUploadImage({ open }: ISongUploadImage) {
   // React Query
   const uploadImage = useUploadSongImage();
+  const queryClient = useQueryClient();
 
   // State
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -45,10 +51,18 @@ export default function SongUploadImage() {
       });
 
       onSuccess?.('ok');
+      queryClient.invalidateQueries({ queryKey: ['songs'] });
     } catch (error) {
       onError?.(error as Error);
     }
   };
+
+  useEffect(() => {
+    if (!open) {
+      setFileList([]);
+      setProgress(0);
+    }
+  }, [open]);
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
     setFileList(newFileList.slice(-1));

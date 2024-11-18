@@ -24,7 +24,7 @@ export default function SongUpload({ open, setOpen }: ISongUploadProps) {
           </Space>
         }
       >
-        <SongTab />
+        <SongTab open={open} />
       </Drawer>
     </>
   );

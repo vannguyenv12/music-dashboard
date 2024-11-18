@@ -72,10 +72,12 @@ export default function SongTable({ setOpen }: ISongTableProps) {
 
   const { data: songs } = useGetSongs();
 
+  const dataSource = songs?.data.map((song) => ({ key: song._id, ...song }));
+
   return (
     <Table<ISong>
       columns={columns}
-      dataSource={songs?.data || []}
+      dataSource={dataSource || []}
       pagination={{ pageSize: 100 }}
     />
   );
