@@ -14,6 +14,7 @@ import DashboardPage from './pages/dashboard/dashboard-page.tsx';
 import SignInPage from './pages/sign-in/sign-in-page.tsx';
 import SignUpPage from './pages/sign-up/sign-up-page.tsx';
 import ProtectedRoute from './components/auth/protected-route.tsx';
+import SongPage from './pages/song/song-page.tsx';
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/manage-song',
-        element: <div>Manage Song</div>,
+        element: <SongPage />,
       },
       {
         path: '/upload',
