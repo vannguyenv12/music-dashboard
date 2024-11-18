@@ -16,4 +16,14 @@ export const songApi = {
 
     return axiosClient.post<unknown, ISongResponse>(url, data);
   },
+  uploadImage({ id, image }: { id: string; image: any }) {
+    const url = `/songs/${id}/upload-cover`;
+
+    const formData = new FormData();
+    formData.append('coverImage', image);
+
+    return axiosClient.post<unknown, ISongResponse>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };

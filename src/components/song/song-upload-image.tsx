@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { useUploadSongImage } from '../../apis/react-query/song-react-query';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -14,6 +15,10 @@ const getBase64 = (file: FileType): Promise<string> =>
   });
 
 export default function SongUploadImage() {
+  // React Query
+  const uploadImage = useUploadSongImage();
+
+  // State
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -27,8 +32,17 @@ export default function SongUploadImage() {
     setPreviewOpen(true);
   };
 
+  const handleUploadImage: UploadProps['customRequest'] = async (options) => {
+    const { file, onProgress, onSuccess } = options;
+
+    await uploadImage.mutateAsync({
+      id: '673b28b87c78a45d013aa274',
+      image: file,
+    });
+  };
+
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
+    setFileList(newFileList.slice(-1));
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type='button'>
@@ -39,7 +53,7 @@ export default function SongUploadImage() {
   return (
     <>
       <Upload
-        action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+        customRequest={handleUploadImage}
         listType='picture-card'
         fileList={fileList}
         onPreview={handlePreview}
