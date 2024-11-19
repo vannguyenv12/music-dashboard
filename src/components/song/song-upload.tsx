@@ -1,12 +1,10 @@
 import { Button, Drawer, Space } from 'antd';
 import SongTab from './song-tab';
+import { useSongContext } from '../../context/song-context';
 
-interface ISongUploadProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
+export default function SongUpload() {
+  const { open, setOpen } = useSongContext();
 
-export default function SongUpload({ open, setOpen }: ISongUploadProps) {
   return (
     <>
       <Drawer
@@ -24,7 +22,7 @@ export default function SongUpload({ open, setOpen }: ISongUploadProps) {
           </Space>
         }
       >
-        <SongTab open={open} />
+        <SongTab />
       </Drawer>
     </>
   );

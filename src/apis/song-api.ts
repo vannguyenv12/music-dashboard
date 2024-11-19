@@ -38,4 +38,28 @@ export const songApi = {
       },
     });
   },
+
+  uploadAudio({
+    id,
+    audio,
+    onProgress,
+  }: {
+    id: string;
+    audio: File;
+    onProgress: (value: number) => void;
+  }) {
+    const url = `/songs/upload-audio`;
+
+    const formData = new FormData();
+    formData.append('songId', id);
+    formData.append('audioFile', audio);
+
+    return axiosClient.post<unknown, ISongResponse>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (event) => {
+        const percent = Math.floor((event.loaded / (event.total || 1)) * 100);
+        onProgress(percent);
+      },
+    });
+  },
 };

@@ -19,3 +19,9 @@ export function useUploadSongImage() {
     mutationFn: songApi.uploadImage,
   });
 }
+
+export function useUploadSongAudio() {
+  return useMutation({
+    mutationFn: songApi.uploadAudio,
+  });
+}

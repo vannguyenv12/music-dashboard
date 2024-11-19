@@ -6,12 +6,8 @@ import { createBackendUrl } from '../../configs/app-config';
 import { formatDate } from '../../utils/date-util';
 import { useSongContext } from '../../context/song-context';
 
-interface ISongTableProps {
-  setOpen: (open: boolean) => void;
-}
-
-export default function SongTable({ setOpen }: ISongTableProps) {
-  const { setSelectedSong } = useSongContext();
+export default function SongTable() {
+  const { setSelectedSong, setOpen } = useSongContext();
 
   const columns: TableProps<ISong>['columns'] = [
     {

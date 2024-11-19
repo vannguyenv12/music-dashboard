@@ -5,13 +5,11 @@ import SongTable from './song-table';
 import SongUpload from './song-upload';
 
 export default function ManageSong() {
-  const [open, setOpen] = useState(false);
-
   return (
     <SongProvider>
       <SongModal />
-      <SongTable setOpen={setOpen} />
-      <SongUpload open={open} setOpen={setOpen} />
+      <SongTable />
+      <SongUpload />
     </SongProvider>
   );
 }

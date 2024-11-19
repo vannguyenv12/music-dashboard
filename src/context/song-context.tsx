@@ -4,6 +4,8 @@ import { ISong } from '../models/song-model';
 interface ISongContext {
   selectedSong: ISong | null;
   setSelectedSong: (song: ISong | null) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 const SongContext = createContext<ISongContext | null>(null);
@@ -14,9 +16,12 @@ interface ISongProviderProps {
 
 export default function SongProvider({ children }: ISongProviderProps) {
   const [selectedSong, setSelectedSong] = useState<ISong | null>(null);
+  const [open, setOpen] = useState(false);
 
   return (
-    <SongContext.Provider value={{ selectedSong, setSelectedSong }}>
+    <SongContext.Provider
+      value={{ selectedSong, setSelectedSong, open, setOpen }}
+    >
       {children}
     </SongContext.Provider>
   );

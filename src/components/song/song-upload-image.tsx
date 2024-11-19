@@ -16,13 +16,9 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-export interface ISongUploadImage {
-  open: boolean;
-}
-
-export default function SongUploadImage({ open }: ISongUploadImage) {
+export default function SongUploadImage() {
   // Context
-  const { selectedSong } = useSongContext();
+  const { selectedSong, open } = useSongContext();
 
   // React Query
   const uploadImage = useUploadSongImage();
