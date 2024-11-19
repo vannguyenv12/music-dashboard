@@ -1,7 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { DatePicker, Form, FormInstance, FormProps, Input, Select } from 'antd';
 import { useGetGenres } from '../../apis/react-query/genre-react-query';
-import { useCreateSong } from '../../apis/react-query/song-react-query';
+import {
+  useCreateSong,
+  useUpdateSong,
+} from '../../apis/react-query/song-react-query';
 import { useGetCurrentUser } from '../../apis/react-query/user-react-query';
 import { useNotificationContext } from '../../context/notification';
 import { ISongPayload } from '../../models/song-model';
@@ -32,8 +35,9 @@ export default function SongForm({ form }: ISongFormProps) {
   // React Query
   const queryClient = useQueryClient();
   const { data: genres, isLoading } = useGetGenres();
-  const createSong = useCreateSong();
   const { data: me } = useGetCurrentUser();
+  const createSong = useCreateSong();
+  const updateSong = useUpdateSong();
 
   const artistId = me?.data._id || '';
 
@@ -48,10 +52,16 @@ export default function SongForm({ form }: ISongFormProps) {
       artist: artistId,
       releaseDate: formatDateForPayload(values.releaseDate),
     };
-    await createSong.mutateAsync(data);
-    notification.success('Create song successfully!');
-    setOpenModal(false);
+    if (selectedSong) {
+      // update
+      await updateSong.mutateAsync({ id: selectedSong._id, data });
+      notification.success('Update song successfully!');
+    } else {
+      await createSong.mutateAsync(data);
+      notification.success('Create song successfully!');
+    }
 
+    setOpenModal(false);
     queryClient.invalidateQueries({ queryKey: ['songs'] });
   };
 
@@ -61,9 +71,7 @@ export default function SongForm({ form }: ISongFormProps) {
       form.setFieldValue('genre', selectedSong.genre);
       form.setFieldValue('releaseDate', dayjs(selectedSong.releaseDate));
     } else {
-      form.setFieldValue('title', null);
-      form.setFieldValue('genre', null);
-      form.setFieldValue('releaseDate', null);
+      form.resetFields();
     }
   }, [selectedSong]);
 

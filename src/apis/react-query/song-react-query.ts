@@ -14,6 +14,12 @@ export function useCreateSong() {
   });
 }
 
+export function useUpdateSong() {
+  return useMutation({
+    mutationFn: songApi.update,
+  });
+}
+
 export function useUploadSongImage() {
   return useMutation({
     mutationFn: songApi.uploadImage,

@@ -16,6 +16,11 @@ export const songApi = {
 
     return axiosClient.post<unknown, ISongResponse>(url, data);
   },
+  update({ id, data }: { id: string; data: ISongPayload }) {
+    const url = `/songs/${id}`;
+
+    return axiosClient.patch<unknown, ISongResponse>(url, data);
+  },
   uploadImage({
     id,
     image,
