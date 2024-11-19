@@ -20,6 +20,12 @@ export function useUpdateSong() {
   });
 }
 
+export function useDeleteSong() {
+  return useMutation({
+    mutationFn: songApi.delete,
+  });
+}
+
 export function useUploadSongImage() {
   return useMutation({
     mutationFn: songApi.uploadImage,

@@ -21,6 +21,11 @@ export const songApi = {
 
     return axiosClient.patch<unknown, ISongResponse>(url, data);
   },
+  delete(id: string) {
+    const url = `/songs/${id}`;
+
+    return axiosClient.delete<unknown, ISongResponse>(url);
+  },
   uploadImage({
     id,
     image,

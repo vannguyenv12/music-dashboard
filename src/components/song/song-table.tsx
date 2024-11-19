@@ -1,6 +1,9 @@
 import type { TableProps } from 'antd';
-import { Button, Space, Table } from 'antd';
-import { useGetSongs } from '../../apis/react-query/song-react-query';
+import { Button, notification, Space, Table } from 'antd';
+import {
+  useDeleteSong,
+  useGetSongs,
+} from '../../apis/react-query/song-react-query';
 import { ISong } from '../../models/song-model';
 import { createBackendUrl } from '../../configs/app-config';
 import { formatDate } from '../../utils/date-util';
@@ -12,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import SongPopup from './song-popup';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function SongTable() {
   const { setSelectedSong, setOpen, setOpenModal } = useSongContext();
@@ -19,6 +23,9 @@ export default function SongTable() {
   const [openPopup, setOpenPopup] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [openId, setOpenId] = useState('');
+
+  const deleteSong = useDeleteSong();
+  const queryClient = useQueryClient();
 
   const columns: TableProps<ISong>['columns'] = [
     {
@@ -81,13 +88,15 @@ export default function SongTable() {
           setOpenId(record._id);
         };
 
-        const handleOk = () => {
+        const handleOk = async () => {
           setConfirmLoading(true);
 
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-          }, 2000);
+          await deleteSong.mutateAsync(record._id);
+          queryClient.invalidateQueries({ queryKey: ['songs'] });
+
+          notification.success({ message: 'Delete song successfully!' });
+
+          setConfirmLoading(false);
         };
 
         return (
