@@ -4,8 +4,11 @@ import { ISong } from '../models/song-model';
 interface ISongContext {
   selectedSong: ISong | null;
   setSelectedSong: (song: ISong | null) => void;
-  open: boolean;
+  open: boolean; // drawer
   setOpen: (open: boolean) => void;
+
+  openModal: boolean; // modal
+  setOpenModal: (open: boolean) => void;
 }
 
 const SongContext = createContext<ISongContext | null>(null);
@@ -17,10 +20,18 @@ interface ISongProviderProps {
 export default function SongProvider({ children }: ISongProviderProps) {
   const [selectedSong, setSelectedSong] = useState<ISong | null>(null);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <SongContext.Provider
-      value={{ selectedSong, setSelectedSong, open, setOpen }}
+      value={{
+        selectedSong,
+        setSelectedSong,
+        open,
+        setOpen,
+        openModal,
+        setOpenModal,
+      }}
     >
       {children}
     </SongContext.Provider>

@@ -4,6 +4,7 @@ import { Button, message, Upload } from 'antd';
 import { useUploadSongAudio } from '../../apis/react-query/song-react-query';
 import { useSongContext } from '../../context/song-context';
 import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function SongUploadAudio() {
   // Context
@@ -15,6 +16,7 @@ export default function SongUploadAudio() {
 
   // React Query
   const uploadAudio = useUploadSongAudio();
+  const queryClient = useQueryClient();
 
   const props: UploadProps = {
     name: 'file',
@@ -34,6 +36,7 @@ export default function SongUploadAudio() {
         });
 
         onSuccess?.('ok');
+        queryClient.invalidateQueries({ queryKey: ['songs'] });
       } catch (error) {
         onError?.(error as Error);
       }

@@ -1,10 +1,10 @@
-import { Button, Form, Modal } from 'antd';
-import { useState } from 'react';
-import SongForm from './song-form';
+import { Form, Modal } from 'antd';
+import { useSongContext } from '../../context/song-context';
 import { ISongPayload } from '../../models/song-model';
+import SongForm from './song-form';
 
 export default function SongModal() {
-  const [open, setOpen] = useState(false);
+  const { openModal, setOpenModal } = useSongContext();
 
   const [form] = Form.useForm<ISongPayload>();
 
@@ -14,20 +14,16 @@ export default function SongModal() {
 
   return (
     <>
-      <Button type='primary' onClick={() => setOpen(true)}>
-        Add New Song
-      </Button>
-
       <Modal
         title='Song Modal'
         centered
-        open={open}
+        open={openModal}
         onOk={handleSubmit}
-        onCancel={() => setOpen(false)}
+        onCancel={() => setOpenModal(false)}
         width={700}
         okText='Submit'
       >
-        <SongForm form={form} setOpen={setOpen} />
+        <SongForm form={form} setOpen={setOpenModal} />
       </Modal>
     </>
   );

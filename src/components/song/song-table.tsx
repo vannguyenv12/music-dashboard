@@ -5,9 +5,10 @@ import { ISong } from '../../models/song-model';
 import { createBackendUrl } from '../../configs/app-config';
 import { formatDate } from '../../utils/date-util';
 import { useSongContext } from '../../context/song-context';
+import { EditOutlined, UploadOutlined } from '@ant-design/icons';
 
 export default function SongTable() {
-  const { setSelectedSong, setOpen } = useSongContext();
+  const { setSelectedSong, setOpen, setOpenModal } = useSongContext();
 
   const columns: TableProps<ISong>['columns'] = [
     {
@@ -60,9 +61,21 @@ export default function SongTable() {
           setOpen(true);
         };
 
+        const handleUpdate = () => {
+          setOpenModal(true);
+        };
         return (
           <Space size='middle'>
-            <Button onClick={handleOpenUpload}>Upload</Button>
+            <Button
+              onClick={handleOpenUpload}
+              icon={<UploadOutlined />}
+            ></Button>
+            <Button
+              onClick={handleUpdate}
+              type='primary'
+              style={{ backgroundColor: '#1b43c8' }}
+              icon={<EditOutlined />}
+            ></Button>
           </Space>
         );
       },
