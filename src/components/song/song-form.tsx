@@ -6,6 +6,9 @@ import { useGetCurrentUser } from '../../apis/react-query/user-react-query';
 import { useNotificationContext } from '../../context/notification';
 import { ISongPayload } from '../../models/song-model';
 import { formatDateForPayload } from '../../utils/date-util';
+import { useSongContext } from '../../context/song-context';
+import { useEffect } from 'react';
+import dayjs from 'dayjs';
 
 const formItemLayout = {
   labelCol: {
@@ -20,12 +23,12 @@ const formItemLayout = {
 
 interface ISongFormProps {
   form: FormInstance<ISongPayload>;
-  setOpen: (open: boolean) => void;
 }
 
-export default function SongForm({ form, setOpen }: ISongFormProps) {
+export default function SongForm({ form }: ISongFormProps) {
   // React Context
   const notification = useNotificationContext();
+  const { selectedSong, setOpenModal } = useSongContext();
   // React Query
   const queryClient = useQueryClient();
   const { data: genres, isLoading } = useGetGenres();
@@ -47,10 +50,24 @@ export default function SongForm({ form, setOpen }: ISongFormProps) {
     };
     await createSong.mutateAsync(data);
     notification.success('Create song successfully!');
-    setOpen(false);
+    setOpenModal(false);
 
     queryClient.invalidateQueries({ queryKey: ['songs'] });
   };
+
+  useEffect(() => {
+    if (selectedSong) {
+      form.setFieldValue('title', selectedSong.title);
+      form.setFieldValue('genre', selectedSong.genre);
+      form.setFieldValue('releaseDate', dayjs(selectedSong.releaseDate));
+    } else {
+      form.setFieldValue('title', null);
+      form.setFieldValue('genre', null);
+      form.setFieldValue('releaseDate', null);
+    }
+  }, [selectedSong]);
+
+  console.log('check selected song', selectedSong);
 
   return (
     <Form

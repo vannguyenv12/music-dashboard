@@ -62,6 +62,7 @@ export default function SongTable() {
         };
 
         const handleUpdate = () => {
+          setSelectedSong(record);
           setOpenModal(true);
         };
         return (

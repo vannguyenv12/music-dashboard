@@ -23,7 +23,7 @@ export default function SongModal() {
         width={700}
         okText='Submit'
       >
-        <SongForm form={form} setOpen={setOpenModal} />
+        <SongForm form={form} />
       </Modal>
     </>
   );
