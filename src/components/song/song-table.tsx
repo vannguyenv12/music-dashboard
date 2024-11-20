@@ -5,7 +5,7 @@ import {
   useGetSongs,
 } from '../../apis/react-query/song-react-query';
 import { ISong } from '../../models/song-model';
-import { createBackendUrl } from '../../configs/app-config';
+import { createBackendUrl, ITEMS_PER_PAGE } from '../../configs/app-config';
 import { formatDate } from '../../utils/date-util';
 import { useSongContext } from '../../context/song-context';
 import {
@@ -135,11 +135,13 @@ export default function SongTable() {
 
   const dataSource = songs?.data.map((song) => ({ key: song._id, ...song }));
 
+  console.log('check songs', songs?.pagination);
+
   return (
     <Table<ISong>
       columns={columns}
       dataSource={dataSource || []}
-      pagination={{ pageSize: 100 }}
+      pagination={{ pageSize: ITEMS_PER_PAGE, total: songs?.pagination?.total }}
     />
   );
 }

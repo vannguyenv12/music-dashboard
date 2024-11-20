@@ -1,3 +1,4 @@
+import { ITEMS_PER_PAGE } from '../configs/app-config';
 import {
   ISongPayload,
   ISongResponse,
@@ -6,8 +7,8 @@ import {
 import axiosClient from './axiosClient';
 
 export const songApi = {
-  getAllSongs() {
-    const url = '/songs?page=1&limit=100';
+  getAllSongs(page: number = 1, limit: number = ITEMS_PER_PAGE) {
+    const url = `/songs?page=${page}&limit=${limit}`;
 
     return axiosClient.get<unknown, ISongsResponse>(url);
   },

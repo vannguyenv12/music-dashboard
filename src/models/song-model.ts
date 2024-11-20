@@ -14,6 +14,14 @@ export interface ISong {
 export interface ISongsResponse {
   message: string;
   data: ISong[];
+  pagination: IPagination;
+}
+
+export interface IPagination {
+  currentPage: number;
+  total: number;
+  totalPages: number;
+  hasMore: true;
 }
 
 export interface ISongResponse {
