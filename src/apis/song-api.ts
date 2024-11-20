@@ -12,6 +12,11 @@ export const songApi = {
 
     return axiosClient.get<unknown, ISongsResponse>(url);
   },
+  getMySongs(page: number = 1, limit: number = ITEMS_PER_PAGE) {
+    const url = `/songs/me?page=${page}&limit=${limit}`;
+
+    return axiosClient.get<unknown, ISongsResponse>(url);
+  },
   create(data: ISongPayload) {
     const url = '/songs';
 

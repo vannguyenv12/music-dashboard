@@ -8,6 +8,13 @@ export function useGetSongs(page: number) {
   });
 }
 
+export function useGetMySongs(page: number) {
+  return useQuery({
+    queryKey: ['my-songs', page],
+    queryFn: () => songApi.getMySongs(page),
+  });
+}
+
 export function usePrefetchSongs(page: number) {
   return usePrefetchQuery({
     queryKey: ['songs', page + 1],

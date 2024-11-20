@@ -1,5 +1,6 @@
 import { Button, Drawer, Space } from 'antd';
 import { useAlbumContext } from '../../context/album-context';
+import AlbumSongCheckbox from './album-song-checkbox';
 
 export default function AlbumDrawer() {
   const { setOpenDrawer, openDrawer } = useAlbumContext();
@@ -25,9 +26,7 @@ export default function AlbumDrawer() {
           </Space>
         }
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <AlbumSongCheckbox />
       </Drawer>
     </>
   );
