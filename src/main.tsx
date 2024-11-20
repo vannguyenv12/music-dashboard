@@ -15,6 +15,7 @@ import SignInPage from './pages/sign-in/sign-in-page.tsx';
 import SignUpPage from './pages/sign-up/sign-up-page.tsx';
 import ProtectedRoute from './components/auth/protected-route.tsx';
 import SongPage from './pages/song/song-page.tsx';
+import AlbumPage from './pages/album/album-page.tsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: '/manage-song',
         element: <SongPage />,
+      },
+      {
+        path: '/manage-album',
+        element: <AlbumPage />,
       },
       {
         path: '/upload',

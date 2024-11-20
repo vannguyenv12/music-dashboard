@@ -31,21 +31,23 @@ const routes = [
         key: '/manage-song',
         label: 'Manage Song',
       },
-      {
-        key: '/upload',
-        label: 'Upload Song',
-      },
     ],
   },
   {
     key: '2',
     icon: null,
-    label: 'Artist',
+    label: 'Album',
+    children: [
+      {
+        key: '/manage-album',
+        label: 'Manage Album',
+      },
+    ],
   },
   {
     key: '3',
     icon: null,
-    label: 'Album',
+    label: 'Artist',
   },
 ];
 
