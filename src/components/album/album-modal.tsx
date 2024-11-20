@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Modal } from 'antd';
 import AlbumForm from './album-form';
 
@@ -18,7 +18,7 @@ export default function AlbumModal() {
         onCancel={() => setOpen(false)}
         width={700}
       >
-        <AlbumForm />
+        <AlbumForm setOpen={setOpen} />
       </Modal>
     </>
   );

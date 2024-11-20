@@ -17,3 +17,8 @@ export interface IAlbumsResponse {
   message: string;
   data: IAlbum[];
 }
+
+export interface IAlbumResponse {
+  message: string;
+  data: IAlbum;
+}

@@ -34,5 +34,10 @@ const columns: TableProps<IAlbum>['columns'] = [
 export default function AlbumTable() {
   const { data: albums } = useGetAlbums();
 
-  return <Table<IAlbum> columns={columns} dataSource={albums?.data || []} />;
+  const dataSource = albums?.data?.map((album) => ({
+    key: album._id,
+    ...album,
+  }));
+
+  return <Table<IAlbum> columns={columns} dataSource={dataSource || []} />;
 }

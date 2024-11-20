@@ -1,18 +1,34 @@
 import type { FormProps } from 'antd';
 import { Button, Form, Input, DatePicker } from 'antd';
 import { IAlbumPayload } from '../../models/album-model';
+import { useCreateAlbum } from '../../apis/react-query/album-react-query';
+import { useNotificationContext } from '../../context/notification';
+import { useQueryClient } from '@tanstack/react-query';
 
-const onFinish: FormProps<IAlbumPayload>['onFinish'] = (values) => {
-  console.log('Success:', values);
-};
+interface IAlbumFormProps {
+  setOpen: (open: boolean) => void;
+}
 
-const onFinishFailed: FormProps<IAlbumPayload>['onFinishFailed'] = (
-  errorInfo
-) => {
-  console.log('Failed:', errorInfo);
-};
+export default function AlbumForm({ setOpen }: IAlbumFormProps) {
+  // Context
+  const notification = useNotificationContext();
+  // React Query
+  const createAlbum = useCreateAlbum();
+  const queryClient = useQueryClient();
 
-export default function AlbumForm() {
+  const onFinish: FormProps<IAlbumPayload>['onFinish'] = async (values) => {
+    console.log('Success:', values);
+
+    await createAlbum.mutateAsync(values);
+
+    notification.success('Create album successfully!');
+
+    // TODO: revalidate data
+    queryClient.invalidateQueries({ queryKey: ['albums'] });
+
+    setOpen(false);
+  };
+
   return (
     <Form
       name='basic'
@@ -21,7 +37,6 @@ export default function AlbumForm() {
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete='off'
     >
       <Form.Item<IAlbumPayload>
