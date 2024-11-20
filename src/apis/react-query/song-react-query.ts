@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { songApi } from '../song-api';
 
-export function useGetSongs() {
+export function useGetSongs(page: number) {
   return useQuery({
-    queryKey: ['songs'],
-    queryFn: () => songApi.getAllSongs(),
+    queryKey: ['songs', page],
+    queryFn: () => songApi.getAllSongs(page),
   });
 }
 

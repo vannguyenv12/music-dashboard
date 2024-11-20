@@ -14,8 +14,9 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import SongPopup from './song-popup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 
 export default function SongTable() {
   const { setSelectedSong, setOpen, setOpenModal } = useSongContext();
@@ -131,17 +132,37 @@ export default function SongTable() {
     },
   ];
 
-  const { data: songs } = useGetSongs();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { data: songs, refetch } = useGetSongs(
+    parseInt(searchParams.get('page') || '1')
+  );
 
   const dataSource = songs?.data.map((song) => ({ key: song._id, ...song }));
 
   console.log('check songs', songs?.pagination);
 
+  const handleChangePagination = (page: number, pageSize: number) => {
+    setSearchParams({
+      page: page.toString(),
+    });
+  };
+
+  useEffect(() => {
+    // Fetch API to get songs by page
+    refetch();
+  }, [searchParams]);
+
   return (
     <Table<ISong>
       columns={columns}
       dataSource={dataSource || []}
-      pagination={{ pageSize: ITEMS_PER_PAGE, total: songs?.pagination?.total }}
+      pagination={{
+        pageSize: ITEMS_PER_PAGE,
+        total: songs?.pagination?.total,
+        onChange: handleChangePagination,
+        current: parseInt(searchParams.get('page') || '1'),
+      }}
     />
   );
 }
