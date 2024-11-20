@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
-import { Checkbox, Divider } from 'antd';
+import { Button, Checkbox, Divider } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { useGetMySongs } from '../../apis/react-query/song-react-query';
+import { useAddSongsToAlbum } from '../../apis/react-query/album-react-query';
+import { useAlbumContext } from '../../context/album-context';
+import { useNotificationContext } from '../../context/notification';
 
 const CheckboxGroup = Checkbox.Group;
 
 export default function AlbumSongCheckbox() {
+  // Context
+  const { selectedAlbum } = useAlbumContext();
+  const notification = useNotificationContext();
+
+  // React Query
+  const { data: songs } = useGetMySongs(1);
+  const addSongs = useAddSongsToAlbum();
+
+  // React State
   const [checkedList, setCheckedList] = useState<string[]>([]); // songIds
 
-  const { data: songs } = useGetMySongs(1);
-
   const plainOptions = songs?.data || [];
-  console.log('check songs', songs?.data);
 
   const checkAll = plainOptions.length === checkedList.length;
   const indeterminate =
@@ -21,12 +30,21 @@ export default function AlbumSongCheckbox() {
     setCheckedList(list);
   };
 
-  console.log('check', checkedList);
-
   const onCheckAllChange: CheckboxProps['onChange'] = (e) => {
     setCheckedList(
       e.target.checked ? plainOptions.map((song) => song._id) : []
     );
+  };
+
+  const handleAddSongs = async () => {
+    if (!selectedAlbum) return;
+
+    await addSongs.mutateAsync({
+      albumId: selectedAlbum?._id,
+      songIds: checkedList,
+    });
+
+    notification.success('Add Song Successfully');
   };
 
   return (
@@ -47,6 +65,10 @@ export default function AlbumSongCheckbox() {
         value={checkedList}
         onChange={onChange}
       />
+      <Divider />
+      <Button type='primary' color='primary' onClick={handleAddSongs}>
+        Submit
+      </Button>
     </>
   );
 }

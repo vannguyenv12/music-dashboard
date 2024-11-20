@@ -4,6 +4,11 @@ export interface IAlbumPayload {
   releaseDate: string;
 }
 
+export interface IAddSongsPayload {
+  albumId: string;
+  songIds: string[];
+}
+
 export interface IAlbum {
   _id: string;
   title: string;

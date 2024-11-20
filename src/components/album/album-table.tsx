@@ -8,7 +8,7 @@ import { useAlbumContext } from '../../context/album-context';
 export default function AlbumTable() {
   const { data: albums } = useGetAlbums();
 
-  const { setOpenDrawer } = useAlbumContext();
+  const { setOpenDrawer, setSelectedAlbum } = useAlbumContext();
 
   const columns: TableProps<IAlbum>['columns'] = [
     {
@@ -35,6 +35,7 @@ export default function AlbumTable() {
       render: (_, record) => {
         const handleClick = () => {
           setOpenDrawer(true);
+          setSelectedAlbum(record);
         };
 
         return (
