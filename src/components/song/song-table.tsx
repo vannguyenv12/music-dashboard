@@ -3,6 +3,7 @@ import { Button, notification, Space, Table } from 'antd';
 import {
   useDeleteSong,
   useGetSongs,
+  usePrefetchSongs,
 } from '../../apis/react-query/song-react-query';
 import { ISong } from '../../models/song-model';
 import { createBackendUrl, ITEMS_PER_PAGE } from '../../configs/app-config';
@@ -133,10 +134,11 @@ export default function SongTable() {
   ];
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page') || '1');
 
-  const { data: songs, refetch } = useGetSongs(
-    parseInt(searchParams.get('page') || '1')
-  );
+  const { data: songs, refetch, isLoading } = useGetSongs(page);
+
+  usePrefetchSongs(page);
 
   const dataSource = songs?.data.map((song) => ({ key: song._id, ...song }));
 
@@ -149,6 +151,14 @@ export default function SongTable() {
   };
 
   useEffect(() => {
+    if (!page || isNaN(page)) {
+      setSearchParams({
+        page: '1',
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     // Fetch API to get songs by page
     refetch();
   }, [searchParams]);
@@ -157,11 +167,12 @@ export default function SongTable() {
     <Table<ISong>
       columns={columns}
       dataSource={dataSource || []}
+      loading={isLoading}
       pagination={{
         pageSize: ITEMS_PER_PAGE,
         total: songs?.pagination?.total,
         onChange: handleChangePagination,
-        current: parseInt(searchParams.get('page') || '1'),
+        current: page,
       }}
     />
   );

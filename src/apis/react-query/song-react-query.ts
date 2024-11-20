@@ -1,10 +1,17 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, usePrefetchQuery, useQuery } from '@tanstack/react-query';
 import { songApi } from '../song-api';
 
 export function useGetSongs(page: number) {
   return useQuery({
     queryKey: ['songs', page],
     queryFn: () => songApi.getAllSongs(page),
+  });
+}
+
+export function usePrefetchSongs(page: number) {
+  return usePrefetchQuery({
+    queryKey: ['songs', page + 1],
+    queryFn: () => songApi.getAllSongs(page + 1),
   });
 }
 
