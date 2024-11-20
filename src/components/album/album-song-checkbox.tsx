@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Checkbox, Divider } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { useGetMySongs } from '../../apis/react-query/song-react-query';
-import { useAddSongsToAlbum } from '../../apis/react-query/album-react-query';
+import {
+  useAddSongsToAlbum,
+  useRemoveSongsFromAlbum,
+} from '../../apis/react-query/album-react-query';
 import { useAlbumContext } from '../../context/album-context';
 import { useNotificationContext } from '../../context/notification';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -16,6 +20,8 @@ export default function AlbumSongCheckbox() {
   // React Query
   const { data: songs } = useGetMySongs(1);
   const addSongs = useAddSongsToAlbum();
+  const removeSong = useRemoveSongsFromAlbum();
+  const queryClient = useQueryClient();
 
   // React State
   const [checkedList, setCheckedList] = useState<string[]>([]); // songIds
@@ -26,7 +32,18 @@ export default function AlbumSongCheckbox() {
   const indeterminate =
     checkedList.length > 0 && checkedList.length < plainOptions.length;
 
-  const onChange = (list: string[]) => {
+  const onChange = async (list: string[]) => {
+    const removedSongIds = checkedList.filter((id) => !list.includes(id));
+
+    if (selectedAlbum && removedSongIds.length > 0) {
+      await removeSong.mutateAsync({
+        albumId: selectedAlbum._id,
+        songIds: removedSongIds,
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ['albums'] });
+    }
+
     setCheckedList(list);
   };
 
@@ -45,6 +62,8 @@ export default function AlbumSongCheckbox() {
     });
 
     notification.success('Add Song Successfully');
+
+    await queryClient.invalidateQueries({ queryKey: ['albums'] });
   };
 
   useEffect(() => {
@@ -53,7 +72,7 @@ export default function AlbumSongCheckbox() {
     }
   }, [selectedAlbum]);
 
-  console.log('check list', checkedList);
+  console.log('check selected album', selectedAlbum);
 
   return (
     <>

@@ -22,4 +22,9 @@ export const albumApi = {
 
     return axiosClient.post<unknown, IAlbumResponse>(url, data);
   },
+  removeSongs(data: IAddSongsPayload) {
+    const url = '/albums/remove-songs';
+
+    return axiosClient.post<unknown, IAlbumResponse>(url, data);
+  },
 };

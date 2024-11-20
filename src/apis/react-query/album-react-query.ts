@@ -19,3 +19,9 @@ export function useAddSongsToAlbum() {
     mutationFn: albumApi.addSongs,
   });
 }
+
+export function useRemoveSongsFromAlbum() {
+  return useMutation({
+    mutationFn: albumApi.removeSongs,
+  });
+}
