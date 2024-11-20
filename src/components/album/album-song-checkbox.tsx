@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Divider } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { useGetMySongs } from '../../apis/react-query/song-react-query';
@@ -46,6 +46,14 @@ export default function AlbumSongCheckbox() {
 
     notification.success('Add Song Successfully');
   };
+
+  useEffect(() => {
+    if (selectedAlbum) {
+      setCheckedList(selectedAlbum.songs);
+    }
+  }, [selectedAlbum]);
+
+  console.log('check list', checkedList);
 
   return (
     <>

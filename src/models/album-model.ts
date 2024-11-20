@@ -12,7 +12,7 @@ export interface IAddSongsPayload {
 export interface IAlbum {
   _id: string;
   title: string;
-  songs: ISong[];
+  songs: string[];
   releaseDate: string;
   artistName: string;
   artistBio: string;
