@@ -18,6 +18,7 @@ import SongPopup from './song-popup';
 import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
+import { useGetCurrentUser } from '../../apis/react-query/user-react-query';
 
 export default function SongTable() {
   const { setSelectedSong, setOpen, setOpenModal } = useSongContext();
@@ -28,6 +29,8 @@ export default function SongTable() {
 
   const deleteSong = useDeleteSong();
   const queryClient = useQueryClient();
+
+  const { data: user } = useGetCurrentUser();
 
   const columns: TableProps<ISong>['columns'] = [
     {
@@ -101,17 +104,21 @@ export default function SongTable() {
           setConfirmLoading(false);
         };
 
+        const isCurrentArtist = user?.data._id === record.artist;
+
         return (
           <Space size='middle'>
             <Button
               onClick={handleOpenUpload}
               icon={<UploadOutlined />}
+              disabled={!isCurrentArtist}
             ></Button>
             <Button
               onClick={handleUpdate}
-              type='primary'
-              style={{ backgroundColor: '#1b43c8' }}
+              type='default'
+              style={{ color: '#1b43c8' }}
               icon={<EditOutlined />}
+              disabled={!isCurrentArtist}
             ></Button>
 
             <SongPopup
@@ -122,9 +129,10 @@ export default function SongTable() {
             >
               <Button
                 onClick={showPopconfirm}
-                type='primary'
-                style={{ backgroundColor: '#e43727' }}
+                type='default'
+                style={{ color: '#e43727' }}
                 icon={<DeleteOutlined />}
+                disabled={!isCurrentArtist}
               ></Button>
             </SongPopup>
           </Space>
@@ -141,8 +149,6 @@ export default function SongTable() {
   usePrefetchSongs(page);
 
   const dataSource = songs?.data.map((song) => ({ key: song._id, ...song }));
-
-  console.log('check songs', songs?.pagination);
 
   const handleChangePagination = (page: number, pageSize: number) => {
     setSearchParams({
