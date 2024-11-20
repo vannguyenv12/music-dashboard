@@ -1,4 +1,8 @@
 import { ISong } from './song-model';
+export interface IAlbumPayload {
+  title: string;
+  releaseDate: string;
+}
 
 export interface IAlbum {
   _id: string;
